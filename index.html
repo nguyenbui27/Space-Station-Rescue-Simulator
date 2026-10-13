@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Space Station Rescue Simulator</title><meta name="description" content="A simple pixel space game. Aim ahead, deliver fuel, and rescue the station across three rounds."><link rel="stylesheet" href="style.css"></head>
+<body><main id="game"><header><h1>Space Station Rescue Simulator</h1><button id="fullscreen">Fullscreen</button></header>
+<div class="board"><canvas id="scene" width="800" height="600" aria-label="Space rescue playfield"></canvas>
+<section id="overlay"><h2 id="title">Rescue the station</h2><p id="intro">Three deliveries. Five fuel cells. Make them count.</p>
+<div id="difficulty" role="group" aria-label="Difficulty"><button data-level="0" aria-pressed="true">Easy</button><button data-level="1" aria-pressed="false">Normal</button><button data-level="2" aria-pressed="false">Hard</button></div>
+<button id="play">Play</button><p class="hint">↑ / ↓ or K / J to move · Space to fire</p></section></div>
+<footer><button id="pause">Pause</button><span>R restart · P pause · Esc pause / leave fullscreen</span><button id="restart">Restart</button></footer>
+<div class="touch" aria-label="Touch controls"><button id="up" aria-label="Move up">↑</button><button id="down" aria-label="Move down">↓</button><button id="fire">Fire</button></div>
+<p id="status" class="sr" aria-live="polite"></p></main><script type="module" src="app.js"></script></body></html>

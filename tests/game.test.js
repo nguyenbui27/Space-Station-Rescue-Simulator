@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {Game,SPEEDS} from '../engine.js';
+const playing=()=>{const g=new Game(()=>.5);g.start();return g;};
+test('starts with 5 fuel cells and round 1',()=>{const g=new Game();assert.equal(g.fuel,5);assert.equal(g.round,1);assert.equal(g.phase,'ready');});
+test('blocks fire before start',()=>assert.equal(new Game().fire(),false));
+test('launch consumes one cell and blocks a second shot',()=>{const g=playing();assert.equal(g.fire(),true);assert.equal(g.fuel,4);assert.equal(g.fire(),false);});
+test('pause freezes movement and blocks fire',()=>{const g=playing();g.pause();const x=g.x;g.update(.05,1);assert.equal(g.x,x);assert.equal(g.fire(),false);g.pause();assert.equal(g.phase,'playing');});
+test('movement stays within playfield',()=>{const g=playing();g.shipY=90;g.update(.05,-1);assert.equal(g.shipY,90);g.shipY=540;g.update(.05,1);assert.equal(g.shipY,540);});
+test('difficulty speeds rise',()=>{assert.ok(SPEEDS[0][0]<SPEEDS[1][0]&&SPEEDS[1][0]<SPEEDS[2][0]);});
+test('successful delivery advances round and restores 2 cells',()=>{const g=playing();g.fuel=2;g.rescue();assert.equal(g.round,2);assert.equal(g.fuel,4);assert.equal(g.score,140);});
+test('fuel rewards are capped at 5',()=>{const g=playing();g.rescue();assert.equal(g.fuel,5);});
+test('three one-shot deliveries win with a maximum score of 840',()=>{const g=playing();g.fire();g.rescue();g.fire();g.rescue();g.fire();g.rescue();assert.equal(g.phase,'won');assert.equal(g.round,3);assert.equal(g.score,840);});
+test('swept collision catches a crossing cell',()=>{const g=playing();g.x=300;g.y=300;g.cell={x:275,y:300};g.update(.05);assert.equal(g.round,2);});
+test('empty fuel loses after final shot misses',()=>{const g=playing();g.fuel=0;g.cell={x:819,y:90};g.update(.05);assert.equal(g.phase,'lost');});
+test('station below playfield loses',()=>{const g=playing();g.y=551;g.update(.01);assert.equal(g.phase,'lost');});
+test('restart restores score fuel and position',()=>{const g=playing();g.rescue();g.reset();assert.equal(g.score,0);assert.equal(g.fuel,5);assert.equal(g.shipY,300);assert.equal(g.phase,'ready');});
